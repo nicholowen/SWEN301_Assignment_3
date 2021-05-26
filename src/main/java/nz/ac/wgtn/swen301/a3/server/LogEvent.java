@@ -50,16 +50,4 @@ public class LogEvent {
     return errorDetails;
   }
 
-  @Override
-  public String toString() {
-    return " \n {\n" +
-          "   id='" + id + "'\n" +
-          "   message='" + message + "'\n" +
-          "   timestamp='" + timestamp + "'\n" +
-          "   thread='" + thread + "'\n" +
-          "   logger='" + logger + "'\n" +
-          "   level='" + level + "'\n" +
-          "   errorDetails='" + errorDetails + "'\n" +
-          " }";
-  }
 }

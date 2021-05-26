@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.apache.log4j.spi.LoggingEvent;
 
+import javax.servlet.http.HttpServlet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +14,13 @@ import java.util.List;
  */
 public class Persistency {
 
-  static List<LogEvent> DB = new ArrayList<>();
+  static ArrayList<LogEvent> DB = new ArrayList<>();
 
   public void postLog(LogEvent lg){
-
     DB.add(lg);
-
   }
 
-  public List<LogEvent> getDB(){
+  public ArrayList<LogEvent> getDB(){
     return DB;
   }
 
