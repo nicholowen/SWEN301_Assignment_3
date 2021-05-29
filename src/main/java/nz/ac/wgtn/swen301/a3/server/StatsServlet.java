@@ -1,16 +1,12 @@
 package nz.ac.wgtn.swen301.a3.server;
 
-import org.apache.commons.logging.Log;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.logging.Level;
 
 public class StatsServlet extends HttpServlet {
 
