@@ -34,9 +34,8 @@ public class LogsServlet extends HttpServlet {
     String _level = req.getParameter("level");
 
     //sets the status code to '400' when parameters are incorrect
-    if(!checkParamaters(req)) resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    if(!checkParameters(req)) resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     else {
-
 
       //converts parameter values to appropriate types for process
       int limit = Integer.parseInt(_limit);
@@ -58,7 +57,7 @@ public class LogsServlet extends HttpServlet {
 
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     // converts log into a 'LogEvent' object which is then stored.
     StringBuilder sb = new StringBuilder();
@@ -68,16 +67,24 @@ public class LogsServlet extends HttpServlet {
       sb.append(line);
       System.out.println(line);
     }
+
     LogEvent log = gson.fromJson(sb.toString(), LogEvent.class);
     if(checkID(log)){
       p.postLog(log);
+      //if the post is valid, then set status to 200
+      resp.setStatus(HttpServletResponse.SC_OK);
+    }else{
+      //if post is invalid, set status to 409
+      resp.setStatus(HttpServletResponse.SC_CONFLICT);
     }
   }
 
-  // this deletes logs... one at a time? Not sure how this needs to work.
+  // deletes all logs
   @Override
-  protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     p.clearDB();
+    if(p.getDB().size() == 0) resp.setStatus(HttpServletResponse.SC_OK);
+    else resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 
 
@@ -85,9 +92,10 @@ public class LogsServlet extends HttpServlet {
   private boolean checkID(LogEvent lg){
     ArrayList<LogEvent> logs = p.getDB();
     try {
-
       for (LogEvent log : logs) {
-        assertNotEquals(lg.getId(), log.getId());
+        if (log != null) {
+          assertNotEquals(lg.getId(), log.getId());
+        }
       }
     }catch(AssertionError e){
       return false;
@@ -96,18 +104,17 @@ public class LogsServlet extends HttpServlet {
   }
 
   //checks the parameters - throws assertion error parameters or parameter names are invalid
-  private boolean checkParamaters(HttpServletRequest req){
+  private boolean checkParameters(HttpServletRequest req){
 
     try {
       String limit = req.getParameter("limit");
       String level = req.getParameter("level");
 
-      // if the parameters are null (meaning the parameter values are incorrectly
-      // inputted or incorrect parameter names)
+      // if the parameters are null (parameter values are incorrectly inputted or incorrect parameter names)
       assertNotNull(limit);
       assertNotNull(level);
 
-      // non-integer string
+      // non-integer string and ensuring at least 1 log is viewed
       assertTrue(Integer.parseInt(limit) > 0);
       // level is not correct
       assertTrue(levels.contains(level.toUpperCase()));
