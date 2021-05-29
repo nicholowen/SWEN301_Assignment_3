@@ -55,4 +55,8 @@ public class Persistency {
     return logger;
   }
 
+  public String[] getAll_levels(){
+    return all_levels;
+  }
+
 }

@@ -6,16 +6,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
+import java.util.*;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-
 
 public class StatsXLSServlet extends HttpServlet {
 
@@ -28,20 +24,29 @@ public class StatsXLSServlet extends HttpServlet {
     resp.setContentType("application/vnd.ms-excel");
     OutputStream out = resp.getOutputStream();
     Persistency p = new Persistency();
+    List<String> all_levels = Arrays.asList(p.getAll_levels());
     HashMap<String, LinkedHashMap<String, Integer>> table = p.getLogLevels();
 
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet sheet = workbook.createSheet("XLS Log Stats");
 
-    int rowCount = 1;
+    int rowCount = 0;
+    Row row = sheet.createRow(rowCount);
+    int columnCount = 0;
+    Cell cell = row.createCell(0);
+    cell.setCellValue("Logger");
+    for(String header : all_levels){
+      cell = row.createCell(++columnCount);
+      cell.setCellValue(header);
+    }
 
+    columnCount = 0;
     for (String logger : table.keySet()) {
-      Row row = sheet.createRow(++rowCount);
-
-      int columnCount = 1;
-
+      row = sheet.createRow(++rowCount);
+      cell = row.createCell(0);
+      cell.setCellValue(logger);
       for (Object field : table.get(logger).values()) {
-        Cell cell = row.createCell(++columnCount);
+        cell = row.createCell(++columnCount);
         if (field instanceof String) {
           cell.setCellValue((String) field);
         } else if (field instanceof Integer) {
@@ -49,8 +54,10 @@ public class StatsXLSServlet extends HttpServlet {
         }
       }
     }
+    //cleanup
     workbook.write(out);
-
+    workbook.close();
+    out.flush();
+    out.close();
   }
-
 }

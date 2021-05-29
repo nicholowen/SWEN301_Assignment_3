@@ -18,7 +18,6 @@ public class TestPostLogs {
 
   Persistency persistency = new Persistency();
 
-
   @Test
   public void test1() throws ServletException, IOException {
 

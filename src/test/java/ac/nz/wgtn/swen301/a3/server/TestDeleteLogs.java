@@ -15,7 +15,6 @@ public class TestDeleteLogs {
   @Test
   public void testInvalidRequestResponseCode2() throws IOException, ServletException {
 
-    //level is incorrect
     MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpServletResponse response = new MockHttpServletResponse();
     LogsServlet service = new LogsServlet();
