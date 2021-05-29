@@ -29,7 +29,7 @@ public class Persistency {
     DB.clear();
   }
 
-  public static HashMap<String, LinkedHashMap<String, Integer>> getLogLevels(){
+  public HashMap<String, LinkedHashMap<String, Integer>> getLogLevels(){
     HashMap<String, LinkedHashMap<String, Integer>> logger = new HashMap<>();
     LinkedHashMap<String, Integer> lvls = new LinkedHashMap<>();
     for(String s : all_levels){
