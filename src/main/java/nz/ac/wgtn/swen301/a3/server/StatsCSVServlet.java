@@ -22,17 +22,16 @@ public class StatsCSVServlet extends HttpServlet {
 
     Persistency p = new Persistency();
 
-    writer.write("Logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\r\n");
+    writer.print("Logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
 
     HashMap<String, LinkedHashMap<String, Integer>> table = p.getLogLevels();
+
     for(String logger : table.keySet()){
-      writer.write(logger);
-      writer.write("\t");
+      writer.print(logger + "\t");
       for(Integer count : table.get(logger).values()){
-        writer.write(count.toString());
-        writer.write("\t");
+        writer.print(count.toString() + "\t");
       }
-      writer.write("\r\n");
+      writer.print("\n");
     }
 
     writer.flush();
