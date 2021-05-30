@@ -103,12 +103,6 @@ public class TestStatsXLS {
       request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
       service.doPost(request, response);
     }
-//    for (int i = 0; i < 10; i++) {
-//      JsonObject json = buildJSON("test" + i, levels.get(r.nextInt(8)), "example.logger_no_2");
-//      request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
-//      service.doPost(request, response);
-//    }
-
   }
 
   public JsonObject buildJSON(String message, String level, String logger) {

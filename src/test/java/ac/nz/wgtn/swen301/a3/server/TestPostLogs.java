@@ -1,8 +1,11 @@
 package ac.nz.wgtn.swen301.a3.server;
 
+import com.google.gson.JsonObject;
 import nz.ac.wgtn.swen301.a3.server.LogEvent;
 import nz.ac.wgtn.swen301.a3.server.LogsServlet;
 import nz.ac.wgtn.swen301.a3.server.Persistency;
+import nz.ac.wgtn.swen301.a3.server.StatsXLSServlet;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -11,41 +14,61 @@ import org.springframework.mock.web.MockHttpSession;
 import javax.servlet.ServletException;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.Assert.assertEquals;
 
 public class TestPostLogs {
 
-  Persistency persistency = new Persistency();
+  MockHttpServletRequest request;
+  MockHttpServletResponse response;
+  LogsServlet service;
+  StatsXLSServlet statsService;
+
+  Persistency p = new Persistency();
+  ArrayList<String> levels = p.getAll_levels();
+
+  @Before
+  public void init() throws ServletException, IOException {
+    service = new LogsServlet();
+    statsService = new StatsXLSServlet();
+    response = new MockHttpServletResponse();
+    request = new MockHttpServletRequest();
+    generateLogs();
+  }
 
   @Test
   public void test1() throws ServletException, IOException {
 
-//    MockHttpServletRequest request = new MockHttpServletRequest();
-//
-//    LogEvent log = new LogEvent("d290f1ee-6c54-4b01-90e6-d701748f085", "application started", "04-05-2021 10:12:00", "main", "com.example.Foo", "DEBUG", "string");
-//
-//    String test = "{\n" +
-//          "  \"d290f1ee-6c54-4b01-90e6-d701748f0851\",\n" +
-//          "  \"application started\",\n" +
-//          "  \"04-05-2021 10:12:00\",\n" +
-//          "  \"main\",\n" +
-//          "  \"com.example.Foo\",\n" +
-//          "  \"DEBUG\",\n" +
-//          "  \"string\"\n" +
-//          "}";
-//
-//    request.setParameter(test);
-//    MockHttpServletResponse response = new MockHttpServletResponse();
-//
-//    LogsServlet service = new LogsServlet();
-//    service.doPost(request, response);
-//
-//    assertEquals(409, response.getStatus());
-
   }
 
-  //04-05-2021 10:12:00
+
+  public void generateLogs() throws ServletException, IOException {
+    p.clearDB();
+    Random r = new Random();
+    for (int i = 0; i < 10; i++) {
+      JsonObject json = buildJSON("test" + i, levels.get(r.nextInt(8)), "example.logger");
+      request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
+      service.doPost(request, response);
+    }
+  }
+
+  public JsonObject buildJSON(String message, String level, String logger) {
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("id", String.valueOf(UUID.randomUUID()));
+    jsonObject.addProperty("message", message);
+    jsonObject.addProperty("timestamp", ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now()));
+    jsonObject.addProperty("thread", "main");
+    jsonObject.addProperty("logger", logger);
+    jsonObject.addProperty("level", level);
+    jsonObject.addProperty("errorDetails", "string");
+    return jsonObject;
+  }
 
 
 }
