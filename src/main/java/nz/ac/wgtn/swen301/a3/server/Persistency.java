@@ -9,14 +9,14 @@ public class Persistency {
 
   private static final String[] all_levels = {"ALL", "TRACE", "DEBUG","INFO", "WARN", "ERROR", "FATAL", "OFF"};
 
-  static ArrayList<LogEvent> DB = new ArrayList<>();
+  static PriorityQueue<LogEvent> DB = new PriorityQueue<>();
 
   public void postLog(LogEvent lg){
-    DB.add(lg);
+    DB.offer(lg);
   }
 
   public ArrayList<LogEvent> getDB(){
-    return DB;
+    return new ArrayList<>(DB);
   }
 
   public void clearDB(){

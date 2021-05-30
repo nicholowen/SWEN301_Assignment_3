@@ -17,7 +17,7 @@ public class StatsCSVServlet extends HttpServlet {
 
   public void processCSV(HttpServletResponse response) throws IOException {
     response.setContentType("text/csv");
-    response.addHeader("content-disposition", "attachment; filename=\"" + "statscsv" + ".csv\"");
+    response.addHeader("content-disposition", "attachment; filename = statscsv.csv");
     PrintWriter writer = response.getWriter();
 
     Persistency p = new Persistency();

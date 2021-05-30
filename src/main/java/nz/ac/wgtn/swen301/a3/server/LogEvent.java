@@ -1,14 +1,20 @@
 package nz.ac.wgtn.swen301.a3.server;
 
-public class LogEvent {
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 
-  private String id;
-  private String message;
-  private String timestamp;
-  private String thread;
-  private String logger;
-  private String level;
-  private String errorDetails;
+public class LogEvent implements Comparable {
+
+  private final String id;
+  private final String message;
+  private final String timestamp;
+  private final String thread;
+  private final String logger;
+  private final String level;
+  private final String errorDetails;
 
   public LogEvent(String id, String message, String timestamp, String thread, String logger, String level, String errorDetails){
 
@@ -30,8 +36,15 @@ public class LogEvent {
     return message;
   }
 
-  public String getTimestamp(){
-    return timestamp;
+  public Timestamp getTimestamp(){
+    Date date = null;
+    try {
+      date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(timestamp);
+      return new Timestamp(date.getTime());
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public String getThread(){
@@ -48,6 +61,15 @@ public class LogEvent {
 
   public String getErrorDetails(){
     return errorDetails;
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    int compare = 0;
+    if(o instanceof LogEvent) {
+      compare = getTimestamp().compareTo(((LogEvent) o).getTimestamp());
+    }
+    return compare;
   }
 
 }
