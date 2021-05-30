@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -43,38 +44,43 @@ public class TestStatsHTML {
     }
 
     @Test
-    public void test1() throws UnsupportedEncodingException {
+    public void testValidHTMLresponse() throws IOException, ServletException {
+        StatsServlet service = new StatsServlet();
+        service.doGet(request, response);
+        assert response.getStatus() == 200;
+    }
+
+    @Test
+    public void testValidHTML() throws UnsupportedEncodingException {
         StatsCSVServlet service = new StatsCSVServlet();
         service.doGet(request, response);
         Document doc = Jsoup.parse(response.getContentAsString());
         String body = doc.body().wholeText();
-        System.out.println(body);
 
         assert body.startsWith("Logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
-        String[] lines = body.split("\n");
+        String[] body_content = body.split("\n");
 
         int logs = 0;
-        for (int i = 1; i < lines.length; i++) {      //for every line in the content
-            String[] line = lines[i].split("\t");
-            for (int j = 1; j < line.length; j++) {   //for every token in the line
-                assert Integer.parseInt(line[j]) >= 0;  //check that each count is not negative
+        for (int i = 1; i < body_content.length; i++) {     //for each line
+            String[] line = body_content[i].split("\t");
+            for (int j = 1; j < line.length; j++) {         //for each element in the line
+                assert Integer.parseInt(line[j]) >= 0;      //make sure the number of logs of that type is not a negative
                 logs += Integer.parseInt(line[j]);
             }
         }
-        System.out.println(logs);
-        System.out.println(p.getDB().size());
         assert p.getDB().size() == logs;
     }
 
 
-
     public void generateLogs() throws ServletException, IOException {
         p.clearDB();
-        for(int i = 0; i < 5; i++){
-            JsonObject json = buildJSON("test" + i, levels.get(i), "example.logger" + i);
+        Random r = new Random();
+        for (int i = 0; i < 10; i++) {
+            JsonObject json = buildJSON("test" + i, levels.get(r.nextInt(8)), "example.logger");
             request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
             service.doPost(request, response);
         }
+
     }
 
     public JsonObject buildJSON(String message, String level, String logger) {

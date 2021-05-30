@@ -49,8 +49,8 @@ public class TestStatsCSV {
 
     @Test
     public void testValidCSVresponse() throws IOException, ServletException {
-        StatsCSVServlet service = new StatsCSVServlet();
-        service.doGet(request, response);
+        StatsCSVServlet csvServlet = new StatsCSVServlet();
+        csvServlet.doGet(request, response);
         assert response.getStatus() == 200;
     }
 
@@ -59,13 +59,13 @@ public class TestStatsCSV {
         StatsCSVServlet service = new StatsCSVServlet();
         service.doGet(request, response);
         assert response.getContentAsString().startsWith("Logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
-        String[] lines = response.getContentAsString().split("\n");
+        String[] content = response.getContentAsString().split("\n");
 
         int logs = 0;
-        for (int i = 1; i < lines.length; i++) {      //for every line in the content
-            String[] line = lines[i].split("\t");
-            for (int j = 1; j < line.length; j++) {   //for every token in the line
-                assert Integer.parseInt(line[j]) >= 0;  //check that each count is not negative
+        for (int i = 1; i < content.length; i++) {       //for each line
+            String[] line = content[i].split("\t");
+            for (int j = 1; j < line.length; j++) {      //for each element in the line
+                assert Integer.parseInt(line[j]) >= 0;   //make sure the number of logs of that type is not a negative
                 logs += Integer.parseInt(line[j]);
             }
         }
@@ -91,27 +91,4 @@ public class TestStatsCSV {
         jsonObject.addProperty("errorDetails", "string");
         return jsonObject;
     }
-
-
-
 }
-
-/**
- * public void testValidCSV() throws IOException {
- *         StatsCSVServlet service = new StatsCSVServlet();
- *         service.doGet(request, response);
- *         assert response.getStatus() == 200;
- *         assert response.getContentAsString().startsWith("logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
- *         String[] lines = response.getContentAsString().split("\n");
- *
- *         int countOfLogs = 0;
- *         for (int i = 1; i < lines.length; i++) {      //for every line in the content
- *             String[] line = lines[i].split("\t");
- *             for (int j = 1; j < line.length; j++) {   //for every token in the line
- *                 assert Integer.parseInt(line[j]) >= 0;  //check that each count is not negative
- *                 countOfLogs += Integer.parseInt(line[j]);
- *             }
- *         }
- *         assert Persistency.DB.size() == countOfLogs;
- *     }
- */

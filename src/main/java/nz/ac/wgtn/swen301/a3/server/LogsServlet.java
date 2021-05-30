@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen301.a3.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,15 +44,15 @@ public class LogsServlet extends HttpServlet {
 
       int count = 0;
       PrintWriter pw = resp.getWriter();
-
-      pw.print("[\n");
-        for (LogEvent d : p.getDB()) {
-          if (count < limit && d.getLevel().equals(level) && levels.indexOf(d.getLevel()) >= level_index){
-            pw.println(gson.toJson(d));
-          }
-        count++;
+      ArrayList<LogEvent> jsonList = new ArrayList<>();
+      for (LogEvent d : p.getDB()) {
+        if (count < limit && levels.indexOf(d.getLevel()) >= level_index){
+          jsonList.add(d);
+        }
+      count++;
       }
-      pw.print("]");
+      pw.println(gson.toJson(jsonList));
+
     }
   }
 
@@ -65,7 +66,6 @@ public class LogsServlet extends HttpServlet {
     String line;
     while((line = br.readLine()) != null){
       sb.append(line);
-      System.out.println(line);
     }
 
     LogEvent log = gson.fromJson(sb.toString(), LogEvent.class);
