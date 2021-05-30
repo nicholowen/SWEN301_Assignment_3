@@ -1,11 +1,5 @@
 package nz.ac.wgtn.swen301.a3.server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import org.apache.log4j.spi.LoggingEvent;
-
-import javax.servlet.http.HttpServlet;
 import java.util.*;
 
 /**
@@ -44,19 +38,14 @@ public class Persistency {
 
     for(LogEvent lg : DB){
       LinkedHashMap<String, Integer> levels = logger.get(lg.getLogger());
-//      int q = 0;
-//      if(!levels.containsKey(lg.getLevel())){
-//        levels.put(lg.getLevel(), 1);
-//      }else{
         int q = levels.get(lg.getLevel()) + 1;
         levels.put(lg.getLevel(), q);
-//      }
     }
     return logger;
   }
 
-  public String[] getAll_levels(){
-    return all_levels;
+  public ArrayList<String> getAll_levels(){
+    return new ArrayList<>(Arrays.asList(all_levels));
   }
 
 }

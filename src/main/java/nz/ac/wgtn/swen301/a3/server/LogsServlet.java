@@ -19,7 +19,7 @@ public class LogsServlet extends HttpServlet {
   Persistency p = new Persistency();
   Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  ArrayList<String> levels = new ArrayList<>(Arrays.asList("ALL","DEBUG","INFO","WARN","ERROR","FATAL","TRACE","OFF"));
+  ArrayList<String> levels = p.getAll_levels();
 
   //constructor with no parameters as per assignment
   public LogsServlet(){}
@@ -36,20 +36,20 @@ public class LogsServlet extends HttpServlet {
     //sets the status code to '400' when parameters are incorrect
     if(!checkParameters(req)) resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     else {
-
       //converts parameter values to appropriate types for process
       int limit = Integer.parseInt(_limit);
       String level = _level.toUpperCase();
+      int level_index = levels.indexOf(level);
 
       int count = 0;
       PrintWriter pw = resp.getWriter();
 
       pw.print("[\n");
         for (LogEvent d : p.getDB()) {
-          if (count < limit && d.getLevel().equals(level)) {
-              pw.println(gson.toJson(d));
-            }
-          count++;
+          if (count < limit && d.getLevel().equals(level) && levels.indexOf(d.getLevel()) >= level_index){
+            pw.println(gson.toJson(d));
+          }
+        count++;
       }
       pw.print("]");
     }

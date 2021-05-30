@@ -24,7 +24,7 @@ public class StatsXLSServlet extends HttpServlet {
     resp.setContentType("application/vnd.ms-excel");
     OutputStream out = resp.getOutputStream();
     Persistency p = new Persistency();
-    List<String> all_levels = Arrays.asList(p.getAll_levels());
+    ArrayList<String> all_levels = p.getAll_levels();
     HashMap<String, LinkedHashMap<String, Integer>> table = p.getLogLevels();
 
     XSSFWorkbook workbook = new XSSFWorkbook();
