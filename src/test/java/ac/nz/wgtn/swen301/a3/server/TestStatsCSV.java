@@ -26,33 +26,59 @@ public class TestStatsCSV {
     MockHttpServletRequest request;
     MockHttpServletResponse response;
     LogsServlet service;
+
     Persistency p = new Persistency();
     ArrayList<String> levels = p.getAll_levels();
 
     @Before
-    public void init() {
+    public void init() throws ServletException, IOException {
         service = new LogsServlet();
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
+        generateLogs();
     }
 
     @Test
-    public void parseCSVTest_1() throws ServletException, IOException {
+    public void parseCSVTest_1() {
         StatsCSVServlet csvServlet = new StatsCSVServlet();
-
-        for(int i = 0; i < 5; i++){
-            JsonObject json = buildJSON("test" + i, levels.get(i));
-            request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
-            service.doPost(request, response);
-        }
-
         csvServlet.processCSV(response);
 
         String header = "attachment; filename = statscsv.csv";
         assertEquals(header, response.getHeaderValue("content-disposition"));
     }
 
+    @Test
+    public void testValidCSVresponse() throws IOException, ServletException {
+        StatsCSVServlet service = new StatsCSVServlet();
+        service.doGet(request, response);
+        assert response.getStatus() == 200;
+    }
 
+    @Test
+    public void testValidCSV() throws IOException, ServletException {
+        StatsCSVServlet service = new StatsCSVServlet();
+        service.doGet(request, response);
+        assert response.getContentAsString().startsWith("Logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
+        String[] lines = response.getContentAsString().split("\n");
+
+        int logs = 0;
+        for (int i = 1; i < lines.length; i++) {      //for every line in the content
+            String[] line = lines[i].split("\t");
+            for (int j = 1; j < line.length; j++) {   //for every token in the line
+                assert Integer.parseInt(line[j]) >= 0;  //check that each count is not negative
+                logs += Integer.parseInt(line[j]);
+            }
+        }
+        assert p.getDB().size() == logs;
+    }
+
+    public void generateLogs() throws ServletException, IOException {
+        for(int i = 0; i < 5; i++){
+            JsonObject json = buildJSON("test" + i, levels.get(i));
+            request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
+            service.doPost(request, response);
+        }
+    }
 
     public JsonObject buildJSON(String message, String level) {
         JsonObject jsonObject = new JsonObject();
@@ -65,4 +91,27 @@ public class TestStatsCSV {
         jsonObject.addProperty("errorDetails", "string");
         return jsonObject;
     }
+
+
+
 }
+
+/**
+ * public void testValidCSV() throws IOException {
+ *         StatsCSVServlet service = new StatsCSVServlet();
+ *         service.doGet(request, response);
+ *         assert response.getStatus() == 200;
+ *         assert response.getContentAsString().startsWith("logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
+ *         String[] lines = response.getContentAsString().split("\n");
+ *
+ *         int countOfLogs = 0;
+ *         for (int i = 1; i < lines.length; i++) {      //for every line in the content
+ *             String[] line = lines[i].split("\t");
+ *             for (int j = 1; j < line.length; j++) {   //for every token in the line
+ *                 assert Integer.parseInt(line[j]) >= 0;  //check that each count is not negative
+ *                 countOfLogs += Integer.parseInt(line[j]);
+ *             }
+ *         }
+ *         assert Persistency.DB.size() == countOfLogs;
+ *     }
+ */

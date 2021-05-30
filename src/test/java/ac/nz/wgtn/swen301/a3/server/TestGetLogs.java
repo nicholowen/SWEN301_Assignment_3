@@ -1,11 +1,8 @@
 package ac.nz.wgtn.swen301.a3.server;
 
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import nz.ac.wgtn.swen301.a3.server.LogEvent;
 import nz.ac.wgtn.swen301.a3.server.LogsServlet;
-import nz.ac.wgtn.swen301.a3.server.Persistency;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -13,11 +10,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -100,32 +93,6 @@ public class TestGetLogs {
 
     assertTrue(response.getContentType().startsWith("application/json"));
   }
-
-//  @Test
-//  public void testLevelParameter() throws IOException, ServletException {
-//    Persistency p = new Persistency();
-//    Gson gson = new Gson();
-//    ArrayList<String> levels = p.getAll_levels();
-//    for(int i = 0; i < 5; i++){
-//      try {
-//        Thread.sleep(1000);
-//      } catch (InterruptedException e) {
-//        e.printStackTrace();
-//      }
-//      JsonObject json = buildJSON("test"+i, levels.get(i));
-//      request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
-//      service.doPost(request, response);
-//    }
-//    String line = response.getContentAsString();
-//    System.out.println(line);
-//
-//    for(int i = 0; i < 5; i++) {
-////      LogEvent log = gson.fromJson(pw.toString(), LogEvent.class);
-////      System.out.println(log.getTimestamp());
-//
-//    }
-//
-//  }
 
   public JsonObject buildJSON(String message, String level) {
     JsonObject jsonObject = new JsonObject();
