@@ -24,6 +24,34 @@ public class Persistency {
   }
 
   public HashMap<String, LinkedHashMap<String, Integer>> getLogLevels(){
+
+    /**
+     * for each log, add to a map of string and a list. The list contains a number of all levels
+     */
+
+    LinkedHashMap<String, int[]> test1 = new LinkedHashMap<>();
+
+    for(LogEvent lg : DB){
+
+      int[] levelIndex = new int[all_levels.length];
+      for(int i = 0; i < levelIndex.length; i++){
+        if(lg.getLevel().equals(all_levels[i])) levelIndex[i]++;
+      }
+      test1.put(lg.getLogger(), levelIndex);
+    }
+
+    for(String k : test1.keySet()){
+      System.out.println(k + " ");
+      for(int i : test1.get(k)){
+        System.out.print(i + " ");
+      }
+    }
+
+
+
+
+
+
     HashMap<String, LinkedHashMap<String, Integer>> logger = new HashMap<>();
     LinkedHashMap<String, Integer> lvls = new LinkedHashMap<>();
     for(String s : all_levels){
@@ -38,6 +66,7 @@ public class Persistency {
 
     for(LogEvent lg : DB){
       LinkedHashMap<String, Integer> levels = logger.get(lg.getLogger());
+
         int q = levels.get(lg.getLevel()) + 1;
         levels.put(lg.getLevel(), q);
     }

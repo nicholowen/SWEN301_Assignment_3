@@ -91,6 +91,14 @@
             <version>4.9.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>1.23.0</version>
+        </dependency>
+
+
 
     </dependencies>
 
@@ -119,7 +127,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.4.17.v20190418</version>
                 <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
                     <webApp>
                         <contextPath>/resthome4logs</contextPath>
                     </webApp>

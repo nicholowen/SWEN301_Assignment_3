@@ -64,11 +64,9 @@ public class TestPostLogs {
     jsonObject.addProperty("message", message);
     jsonObject.addProperty("timestamp", ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now()));
     jsonObject.addProperty("thread", "main");
-    jsonObject.addProperty("logger", logger);
+    jsonObject.addProperty("logger", "example.logger");
     jsonObject.addProperty("level", level);
     jsonObject.addProperty("errorDetails", "string");
     return jsonObject;
   }
-
-
 }

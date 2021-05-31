@@ -32,21 +32,22 @@ public class StatsXLSServlet extends HttpServlet {
 
     int rowCount = 0;
     Row row = sheet.createRow(rowCount);
-    int columnCount = 0;
+    int columnCount = 1;
     Cell cell = row.createCell(0);
     cell.setCellValue("Logger");
     for(String header : all_levels){
-      cell = row.createCell(++columnCount);
+      cell = row.createCell(columnCount++);
       cell.setCellValue(header);
     }
 
-    columnCount = 0;
+
     for (String logger : table.keySet()) {
+      columnCount = 1;
       row = sheet.createRow(++rowCount);
       cell = row.createCell(0);
       cell.setCellValue(logger);
       for (Object field : table.get(logger).values()) {
-        cell = row.createCell(++columnCount);
+        cell = row.createCell(columnCount++);
         if (field instanceof String) {
           cell.setCellValue((String) field);
         } else if (field instanceof Integer) {

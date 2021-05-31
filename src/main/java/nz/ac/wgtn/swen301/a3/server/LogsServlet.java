@@ -52,7 +52,6 @@ public class LogsServlet extends HttpServlet {
       count++;
       }
       pw.println(gson.toJson(jsonList));
-
     }
   }
 
