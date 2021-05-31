@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>webapp</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <groupId>org.example</groupId>
 <!--    <artifactId>Assignment3</artifactId>-->
     <version>1.0-SNAPSHOT</version>
@@ -82,9 +82,14 @@
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client</artifactId>
-            <version>1.23.0</version>
+            <version>1.39.2-sp.1</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
 
 
     </dependencies>
@@ -144,20 +149,17 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <finalName>resthome4logs-client</finalName>
+                            <finalName>resthome4logs_client</finalName>
                             <archive>
                                 <manifest>
                                     <addClasspath>true</addClasspath>
-                                    <mainClass>
-                                        nz.ac.wgtn.swen301.a3.client.Client
-                                    </mainClass>
+                                    <mainClass> nz.ac.wgtn.swen301.a3.client.Client </mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
 
             <plugin>
                 <groupId>org.jacoco</groupId>
