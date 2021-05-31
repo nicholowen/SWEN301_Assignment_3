@@ -23,7 +23,7 @@ public class Persistency {
     DB.clear();
   }
 
-  public HashMap<String, LinkedHashMap<String, Integer>> getLogLevels(){
+  public LinkedHashMap<String, int[]> getLogLevels(){
 
     /**
      * for each log, add to a map of string and a list. The list contains a number of all levels
@@ -31,13 +31,17 @@ public class Persistency {
 
     LinkedHashMap<String, int[]> test1 = new LinkedHashMap<>();
 
-    for(LogEvent lg : DB){
+    for(int i = 0; i < DB.size(); i++){
+      test1.put(getDB().get(i).getLogger(), new int[8]);
+    }
 
-      int[] levelIndex = new int[all_levels.length];
-      for(int i = 0; i < levelIndex.length; i++){
-        if(lg.getLevel().equals(all_levels[i])) levelIndex[i]++;
+
+    for(LogEvent lg : DB){
+      for(int i = 0; i < 8; i++){
+        if(lg.getLevel().equals(all_levels[i])) {
+          test1.get(lg.getLogger())[i]++;
+        }
       }
-      test1.put(lg.getLogger(), levelIndex);
     }
 
     for(String k : test1.keySet()){
@@ -52,25 +56,25 @@ public class Persistency {
 
 
 
-    HashMap<String, LinkedHashMap<String, Integer>> logger = new HashMap<>();
-    LinkedHashMap<String, Integer> lvls = new LinkedHashMap<>();
-    for(String s : all_levels){
-      lvls.put(s, 0);
-    }
-    Persistency p = new Persistency();
-    ArrayList<LogEvent> DB = p.getDB();
-
-    for(LogEvent lg : DB){
-      logger.put(lg.getLogger(), lvls);
-    }
-
-    for(LogEvent lg : DB){
-      LinkedHashMap<String, Integer> levels = logger.get(lg.getLogger());
-
-        int q = levels.get(lg.getLevel()) + 1;
-        levels.put(lg.getLevel(), q);
-    }
-    return logger;
+//    HashMap<String, LinkedHashMap<String, Integer>> logger = new HashMap<>();
+//    LinkedHashMap<String, Integer> lvls = new LinkedHashMap<>();
+//    for(String s : all_levels){
+//      lvls.put(s, 0);
+//    }
+//    Persistency p = new Persistency();
+//    ArrayList<LogEvent> DB = p.getDB();
+//
+//    for(LogEvent lg : DB){
+//      logger.put(lg.getLogger(), lvls);
+//    }
+//
+//    for(LogEvent lg : DB){
+//      LinkedHashMap<String, Integer> levels = logger.get(lg.getLogger());
+//
+//        int q = levels.get(lg.getLevel()) + 1;
+//        levels.put(lg.getLevel(), q);
+//    }
+    return test1;
   }
 
   public ArrayList<String> getAll_levels(){

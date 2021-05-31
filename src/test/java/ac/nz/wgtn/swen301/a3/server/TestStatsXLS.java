@@ -1,9 +1,12 @@
 package ac.nz.wgtn.swen301.a3.server;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import nz.ac.wgtn.swen301.a3.server.LogEvent;
 import nz.ac.wgtn.swen301.a3.server.LogsServlet;
 import nz.ac.wgtn.swen301.a3.server.Persistency;
 import nz.ac.wgtn.swen301.a3.server.StatsXLSServlet;
+import org.apache.commons.logging.Log;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -20,6 +23,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -80,10 +84,15 @@ public class TestStatsXLS {
 
     int logs = 0;
     int rowNum;
-    if(sheet.getLastRowNum() == 1) rowNum = 2;
-    else rowNum = sheet.getLastRowNum();
+    if(sheet.getLastRowNum() == 1) {
+      rowNum = 2;
+    }
+    else{
+      rowNum = sheet.getLastRowNum() + 1;
+    }
 
-    for (int i = 1; i < rowNum; i++) {       //for each line
+
+    for (int i = 1; i < rowNum; i++) {       //for each line;
       Row nextRow = sheet.getRow(i);
       for (int j = 1; j < nextRow.getLastCellNum(); j++) {//for each element in the line
         Cell cell = nextRow.getCell(j);
@@ -92,6 +101,8 @@ public class TestStatsXLS {
       }
     }
 
+    System.out.println("EXPECTED = " + logs);
+    System.out.println(p.getDB().size());
     assert p.getDB().size() == logs;
   }
 
@@ -100,6 +111,11 @@ public class TestStatsXLS {
     Random r = new Random();
     for (int i = 0; i < 10; i++) {
       JsonObject json = buildJSON("test" + i, levels.get(r.nextInt(8)), "example.logger");
+      request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
+      service.doPost(request, response);
+    }
+    for (int i = 0; i < 10; i++) {
+      JsonObject json = buildJSON("test" + i, levels.get(r.nextInt(8)), "example.logger" + i);
       request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
       service.doPost(request, response);
     }

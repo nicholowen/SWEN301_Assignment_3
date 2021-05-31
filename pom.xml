@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>webapp</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <groupId>org.example</groupId>
 <!--    <artifactId>Assignment3</artifactId>-->
     <version>1.0-SNAPSHOT</version>
@@ -64,13 +64,6 @@
             <version>4.1.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -83,12 +76,6 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.9.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
@@ -145,6 +132,32 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>resthome4logs-client</finalName>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <mainClass>
+                                        nz.ac.wgtn.swen301.a3.client.Client
+                                    </mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.jacoco</groupId>

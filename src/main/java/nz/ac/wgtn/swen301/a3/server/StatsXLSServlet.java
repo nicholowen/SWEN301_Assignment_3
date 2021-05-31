@@ -25,7 +25,7 @@ public class StatsXLSServlet extends HttpServlet {
     OutputStream out = resp.getOutputStream();
     Persistency p = new Persistency();
     ArrayList<String> all_levels = p.getAll_levels();
-    HashMap<String, LinkedHashMap<String, Integer>> table = p.getLogLevels();
+    HashMap<String, int[]> table = p.getLogLevels();
 
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet sheet = workbook.createSheet("XLS Log Stats");
@@ -46,13 +46,9 @@ public class StatsXLSServlet extends HttpServlet {
       row = sheet.createRow(++rowCount);
       cell = row.createCell(0);
       cell.setCellValue(logger);
-      for (Object field : table.get(logger).values()) {
+      for (Integer field : table.get(logger)) {
         cell = row.createCell(columnCount++);
-        if (field instanceof String) {
-          cell.setCellValue((String) field);
-        } else if (field instanceof Integer) {
-          cell.setCellValue((Integer) field);
-        }
+        cell.setCellValue(field);
       }
     }
     //cleanup

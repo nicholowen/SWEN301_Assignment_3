@@ -30,11 +30,11 @@ public class StatsCSVServlet extends HttpServlet {
 
     if (writer != null) {
       writer.print("Logger\tALL\tTRACE\tDEBUG\tINFO\tWARN\tERROR\tFATAL\tOFF\n");
-      HashMap<String, LinkedHashMap<String, Integer>> table = p.getLogLevels();
+      LinkedHashMap<String, int[]> table = p.getLogLevels();
 
       for (String logger : table.keySet()) {
         writer.print(logger + "\t");
-        for (Integer count : table.get(logger).values()) {
+        for (Integer count : table.get(logger)) {
           writer.print(count.toString() + "\t");
         }
         writer.print("\n");

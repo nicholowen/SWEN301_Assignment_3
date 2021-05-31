@@ -31,42 +31,33 @@ public class StatsServlet extends HttpServlet {
     out.println("<h1>Echoing Log Information</h1>");
     out.println("<table border><th>Logger</th><th>ALL</th><th>TRACE</th><th>DEBUG</th><th>INFO</th><th>WARN</th><th>ERROR</th><th>FATAL</th><th>OFF</th>");
     // list headers send by the client
-    HashMap<String, LinkedHashMap<String, Integer>> lg = p.getLogLevels();
+    LinkedHashMap<String, int[]> lg = p.getLogLevels();
     for(String logger_name : lg.keySet()) {
-      HashMap<String, Integer> logger = lg.get(logger_name);
       out.print("<tr><td>");
       out.print(logger_name);
       out.print("<td>");
-      if(logger.containsKey("ALL")) out.print(logger.get("ALL"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[0]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("TRACE")) out.print(logger.get("TRACE"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[1]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("DEBUG")) out.print(logger.get("DEBUG"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[2]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("INFO")) out.print(logger.get("INFO"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[3]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("WARN")) out.print(logger.get("WARN"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[4]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("ERROR")) out.print(logger.get("ERROR"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[5]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("FATAL")) out.print(logger.get("FATAL"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[6]);
       out.print("</td>");
       out.print("<td>");
-      if(logger.containsKey("OFF")) out.print(logger.get("OFF"));
-      else out.print(0);
+      out.print(lg.get(logger_name)[7]);
       out.print("</td>");
     }
 
