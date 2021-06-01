@@ -1,8 +1,10 @@
 package ac.nz.wgtn.swen301.a3.server;
 
-
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import nz.ac.wgtn.swen301.a3.server.LogEvent;
 import nz.ac.wgtn.swen301.a3.server.LogsServlet;
+import nz.ac.wgtn.swen301.a3.server.Persistency;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -10,7 +12,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -22,6 +28,8 @@ public class TestGetLogs {
   MockHttpServletRequest request;
   MockHttpServletResponse response;
   LogsServlet service;
+  Persistency p = new Persistency();
+  ArrayList<String> levels = p.getAll_levels();
 
   @Before
   public void init() {
@@ -94,9 +102,52 @@ public class TestGetLogs {
     assertTrue(response.getContentType().startsWith("application/json"));
   }
 
-  public JsonObject buildJSON(String message, String level) {
+  @Test
+  public void testValidJson(){
+    LogEvent lg = null;
+    try{
+      Gson gson = new Gson();
+      JsonObject json = buildJSON("valid","test", "WARN", "example.logger");
+      request.setContent(json.toString().getBytes(StandardCharsets.UTF_8));
+
+      service.doPost(request, response);
+
+
+      request.setParameter("limit", "1");
+      request.setParameter("level", "ALL");
+
+      service.doGet(request,response);
+      LogEvent[] log = gson.fromJson(response.getContentAsString(), LogEvent[].class);
+      lg = log[0];
+
+
+    } catch (ServletException | IOException e) {
+      e.printStackTrace();
+    }
+    boolean validTimeStamp;
+    if(lg != null) {
+      assertEquals("valid", lg.getId());
+      assertEquals("test", lg.getMessage());
+      assertEquals("main", lg.getThread());
+      try {
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(lg.getTimestamp().toString());
+        validTimeStamp = true;
+      }catch (ParseException e){
+        validTimeStamp = false;
+      }
+      assertTrue(validTimeStamp);
+      assertEquals("example.logger", lg.getLogger());
+      assertEquals("WARN", lg.getLevel());
+      assertEquals("string", lg.getErrorDetails());
+    }
+
+  }
+
+
+  public JsonObject buildJSON(String id, String message, String level, String logger) {
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("id", String.valueOf(UUID.randomUUID()));
+    if(id.equals("")) id = String.valueOf(UUID.randomUUID());
+    jsonObject.addProperty("id", id);
     jsonObject.addProperty("message", message);
     jsonObject.addProperty("timestamp", ofPattern("dd-MM-yyyy HH:mm:ss").format(LocalDateTime.now()));
     jsonObject.addProperty("thread", "main");

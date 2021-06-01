@@ -44,36 +44,6 @@ public class Persistency {
       }
     }
 
-    for(String k : test1.keySet()){
-      System.out.println(k + " ");
-      for(int i : test1.get(k)){
-        System.out.print(i + " ");
-      }
-    }
-
-
-
-
-
-
-//    HashMap<String, LinkedHashMap<String, Integer>> logger = new HashMap<>();
-//    LinkedHashMap<String, Integer> lvls = new LinkedHashMap<>();
-//    for(String s : all_levels){
-//      lvls.put(s, 0);
-//    }
-//    Persistency p = new Persistency();
-//    ArrayList<LogEvent> DB = p.getDB();
-//
-//    for(LogEvent lg : DB){
-//      logger.put(lg.getLogger(), lvls);
-//    }
-//
-//    for(LogEvent lg : DB){
-//      LinkedHashMap<String, Integer> levels = logger.get(lg.getLogger());
-//
-//        int q = levels.get(lg.getLevel()) + 1;
-//        levels.put(lg.getLevel(), q);
-//    }
     return test1;
   }
 

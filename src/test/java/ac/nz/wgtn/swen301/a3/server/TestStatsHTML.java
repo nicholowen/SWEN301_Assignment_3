@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.jsoup.parser.Parser;
 
 import javax.servlet.ServletException;
 import java.io.IOException;

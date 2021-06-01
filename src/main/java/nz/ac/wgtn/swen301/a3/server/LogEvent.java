@@ -3,7 +3,6 @@ package nz.ac.wgtn.swen301.a3.server;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class LogEvent implements Comparable {

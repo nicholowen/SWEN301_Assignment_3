@@ -1,12 +1,9 @@
 package ac.nz.wgtn.swen301.a3.server;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import nz.ac.wgtn.swen301.a3.server.LogEvent;
 import nz.ac.wgtn.swen301.a3.server.LogsServlet;
 import nz.ac.wgtn.swen301.a3.server.Persistency;
 import nz.ac.wgtn.swen301.a3.server.StatsXLSServlet;
-import org.apache.commons.logging.Log;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -23,7 +20,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -100,9 +96,6 @@ public class TestStatsXLS {
         logs += cell.getNumericCellValue();
       }
     }
-
-    System.out.println("EXPECTED = " + logs);
-    System.out.println(p.getDB().size());
     assert p.getDB().size() == logs;
   }
 

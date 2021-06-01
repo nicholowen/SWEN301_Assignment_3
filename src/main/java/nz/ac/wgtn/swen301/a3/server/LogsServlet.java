@@ -68,13 +68,15 @@ public class LogsServlet extends HttpServlet {
     }
 
     LogEvent log = gson.fromJson(sb.toString(), LogEvent.class);
-    if(checkID(log)){
+    if(checkJson(log) && checkID(log)){
       p.postLog(log);
       //if the post is valid, then set status to 200
       resp.setStatus(HttpServletResponse.SC_OK);
-    }else{
+    }else {
+
       //if post is invalid, set status to 409
-      resp.setStatus(HttpServletResponse.SC_CONFLICT);
+      if(!checkJson(log)) resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      if(!checkID(log)) resp.setStatus(HttpServletResponse.SC_CONFLICT);
     }
   }
 
@@ -91,11 +93,27 @@ public class LogsServlet extends HttpServlet {
   private boolean checkID(LogEvent lg){
     ArrayList<LogEvent> logs = p.getDB();
     try {
-      for (LogEvent log : logs) {
-        if (log != null) {
-          assertNotEquals(lg.getId(), log.getId());
+        for (LogEvent log : logs) {
+          if (log != null && lg != null) {
+            assertNotEquals(lg.getId(), log.getId());
+          }
         }
-      }
+
+    }catch(AssertionError e){
+      return false;
+    }
+    return true;
+  }
+
+  private boolean checkJson(LogEvent lg){
+    try {
+      if(lg == null) return false;
+      assertNotEquals("", lg.getMessage());
+      assertNotEquals("", lg.getId());
+      assertNotEquals("", lg.getLogger());
+      assertNotEquals("", lg.getThread());
+      assertNotEquals("", lg.getTimestamp());
+      assertNotEquals("", lg.getLevel());
     }catch(AssertionError e){
       return false;
     }
